@@ -6,28 +6,33 @@ import styles from './Todo.style';
 
 interface TodoProps {
   item: {
-    id: string
+    id: string;
     title: string;
     completed: boolean;
-  }
-};
+  };
+  deleteTodo: (id: string) => void;
+}
 
 function Todo(props: TodoProps): JSX.Element {
-
-  const {item: {id, title, completed}} = props;
+  const {
+    item: {id, title, completed}, deleteTodo} = props;
 
   const [done, setDone] = useState<boolean>(completed);
-
-  useEffect(() => {
-    setDone(completed);
-}, [completed ]);
 
   const handlePress = () => {
     setDone(!done);
   };
 
+  useEffect(() => {
+    setDone(completed);
+  }, [completed]);
+
   return (
-    <TouchableOpacity style={[styles.container, done && styles.completed]} onPress={handlePress}>
+    <TouchableOpacity
+      style={[styles.container, done && styles.completed]}
+      onPress={handlePress}
+      onLongPress={() => deleteTodo(id)}
+      >
       <Text style={[styles.text, done && styles.completed]}>{title}</Text>
     </TouchableOpacity>
   );

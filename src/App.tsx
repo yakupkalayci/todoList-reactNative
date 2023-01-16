@@ -12,7 +12,7 @@ import TodoHeader from './components/TodoHeader';
 import Todo from './components/TodoBody/Todo';
 import TodoForm from './components/TodoFooter/TodoForm';
 
-interface ITodo {
+export interface ITodo {
   id: string;
   title: string;
   done: boolean;
@@ -34,6 +34,10 @@ function App(): JSX.Element {
     setTodoInput('');
   };
 
+  const deleteTodo = (id:string): void => {
+    setTodos(todos.filter(todo => todo.id !== id));
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <View>
@@ -43,6 +47,7 @@ function App(): JSX.Element {
           renderItem={({item}) => (
             <Todo
               item={{id: item.id, title: item.title, completed: item.done}}
+              deleteTodo={deleteTodo}
             />
           )}
         />

@@ -5,17 +5,25 @@
  * @format
  */
 
-import React from 'react';
+import React, {useState} from 'react';
 import {SafeAreaView, StyleSheet} from 'react-native';
 
 import TodoHeader from './components/TodoHeader';
 import Todo from './components/TodoBody/Todo';
 import TodoForm from './components/TodoFooter/TodoForm';
 
+interface ITodo {
+  id: number;
+  title: string;
+  done: boolean;
+}
+
 function App(): JSX.Element {
+  const [todos, setTodos] = useState<ITodo[]>([]);
+
   return (
     <SafeAreaView style={styles.container}>
-      <TodoHeader title="Todo List" counter={0} />
+      <TodoHeader title="Yapılacaklar" counter={todos.length} />
       <Todo />
       <TodoForm />
     </SafeAreaView>
@@ -27,7 +35,8 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'space-between',
     backgroundColor: '#063970',
-  }
+    padding: 10,
+  },
 });
 
 export default App;

@@ -6,7 +6,7 @@ import styles from './Todo.style';
 
 interface TodoProps {
   item: {
-    id: number
+    id: string
     title: string;
     completed: boolean;
   }

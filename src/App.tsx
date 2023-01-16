@@ -5,8 +5,9 @@
  * @format
  */
 
-import React, {useState, useId} from 'react';
+import React, {useState, useId, useEffect} from 'react';
 import {SafeAreaView, StyleSheet, View, FlatList} from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import TodoHeader from './components/TodoHeader';
 import Todo from './components/TodoBody/Todo';
@@ -23,20 +24,60 @@ function App(): JSX.Element {
   const [todoInput, setTodoInput] = useState<string>('');
   const id = useId();
 
-  const addNewTodo = (todo: string): void => {
+  const createStorage = async () => {
+    try {
+      await AsyncStorage.setItem('todos', JSON.stringify([]));
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+
+  const addNewTodo = async (todo: string): Promise<void> => {
     const newTodo: ITodo = {
       id: id + new Date().getTime(),
       title: todo,
       done: false,
     };
 
-    setTodos([...todos, newTodo]);
+    setTodos(() => [...todos, newTodo]);
     setTodoInput('');
   };
 
   const deleteTodo = (id:string): void => {
     setTodos(todos.filter(todo => todo.id !== id));
   };
+
+  useEffect(() => {
+    const getTodos = async () => {
+      try {
+        const allTodos = await AsyncStorage.getItem('todos');
+        if (allTodos !== null) {
+          setTodos(JSON.parse(allTodos));
+        } else {
+          await createStorage();
+          try {
+          } catch (err) {
+            console.log(err);
+          }
+        }
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    getTodos();
+  }, []);
+
+  useEffect(() => {
+    const addToStorage = async () => {
+      try {
+        await AsyncStorage.setItem('todos', JSON.stringify(todos));
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    addToStorage();
+  }, [todos]);
 
   return (
     <SafeAreaView style={styles.container}>

@@ -6,7 +6,7 @@
  */
 
 import React, {useState} from 'react';
-import {SafeAreaView, StyleSheet} from 'react-native';
+import {SafeAreaView, StyleSheet, View} from 'react-native';
 
 import TodoHeader from './components/TodoHeader';
 import Todo from './components/TodoBody/Todo';
@@ -21,10 +21,13 @@ interface ITodo {
 function App(): JSX.Element {
   const [todos, setTodos] = useState<ITodo[]>([]);
 
+
   return (
     <SafeAreaView style={styles.container}>
-      <TodoHeader title="Yapılacaklar" counter={todos.length} />
-      <Todo />
+      <View>
+        <TodoHeader title="Yapılacaklar" counter={todos.length} />
+        <Todo item={{id: 1, title: 'deneme', completed: false}} />
+      </View>
       <TodoForm />
     </SafeAreaView>
   );

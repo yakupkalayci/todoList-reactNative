@@ -1,12 +1,35 @@
 /* eslint-disable prettier/prettier */
-import React from 'react';
-import {View, Text} from 'react-native';
+import React, {useState, useEffect} from 'react';
+import {Text, TouchableOpacity} from 'react-native';
 
-function Todo(): JSX.Element {
+import styles from './Todo.style';
+
+interface TodoProps {
+  item: {
+    id: number
+    title: string;
+    completed: boolean;
+  }
+};
+
+function Todo(props: TodoProps): JSX.Element {
+
+  const {item: {id, title, completed}} = props;
+
+  const [done, setDone] = useState<boolean>(completed);
+
+  useEffect(() => {
+    setDone(completed);
+}, [completed ]);
+
+  const handlePress = () => {
+    setDone(!done);
+  };
+
   return (
-    <View>
-      <Text>Todo</Text>
-    </View>
+    <TouchableOpacity style={[styles.container, done && styles.completed]} onPress={handlePress}>
+      <Text style={[styles.text, done && styles.completed]}>{title}</Text>
+    </TouchableOpacity>
   );
 }
 

@@ -1,6 +1,7 @@
 /* eslint-disable prettier/prettier */
-import React, {useState, useEffect} from 'react';
+import React from 'react';
 import {Text, TouchableOpacity} from 'react-native';
+import { ITodo } from '../../../App';
 
 import styles from './Todo.style';
 
@@ -8,29 +9,26 @@ interface TodoProps {
   item: {
     id: string;
     title: string;
-    completed: boolean;
+    done: boolean;
   };
+  todos: ITodo[];
+  setTodos: React.Dispatch<React.SetStateAction<ITodo[]>>;
   deleteTodo: (id: string) => void;
 }
 
 function Todo(props: TodoProps): JSX.Element {
   const {
-    item: {id, title, completed}, deleteTodo} = props;
+    item: {id, title, done}, deleteTodo, todos, setTodos} = props;
 
-  const [done, setDone] = useState<boolean>(completed);
 
   const handlePress = () => {
-    setDone(!done);
+    setTodos(todos.map(todo => todo.id === id ? {...todo, done: !done} : todo));
   };
-
-  useEffect(() => {
-    setDone(completed);
-  }, [completed]);
 
   return (
     <TouchableOpacity
       style={[styles.container, done && styles.completed]}
-      onPress={handlePress}
+      onPress={() => handlePress()}
       onLongPress={() => deleteTodo(id)}
       >
       <Text style={[styles.text, done && styles.completed]}>{title}</Text>

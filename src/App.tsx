@@ -21,6 +21,7 @@ export interface ITodo {
 
 function App(): JSX.Element {
   const [todos, setTodos] = useState<ITodo[]>([]);
+  const [counter, setCounter] = useState<number>(0);
   const [todoInput, setTodoInput] = useState<string>('');
   const id = useId();
 
@@ -31,7 +32,6 @@ function App(): JSX.Element {
       console.log(err);
     }
   };
-
 
   const addNewTodo = async (todo: string): Promise<void> => {
     const newTodo: ITodo = {
@@ -76,18 +76,27 @@ function App(): JSX.Element {
         console.log(err);
       }
     };
+
+    const calcCounter = (): void => {
+      const uncompletedTodos = todos.filter(todo => todo.done !== true);
+      setCounter(uncompletedTodos.length);
+    };
+
     addToStorage();
+    calcCounter();
   }, [todos]);
 
   return (
     <SafeAreaView style={styles.container}>
       <View>
-        <TodoHeader title="Yapılacaklar" counter={todos.length} />
+        <TodoHeader title="Yapılacaklar" counter={counter} />
         <FlatList
           data={todos}
           renderItem={({item}) => (
             <Todo
-              item={{id: item.id, title: item.title, completed: item.done}}
+              item={{id: item.id, title: item.title, done: item.done}}
+              todos={todos}
+              setTodos={setTodos}
               deleteTodo={deleteTodo}
             />
           )}
